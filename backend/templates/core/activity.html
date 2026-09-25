@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}نشاطي — شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>🌿 أهلاً {{ user.first_name }}</h1><p>كل نشاطك ويا #شجّر بمكان واحد.</p></div>
+  <div class="kpis">
+    <div class="kpi"><b>{{ tree_count }}</b><span>🌳 شجرتي</span></div>
+    <div class="kpi"><b>{{ vol.trees }}</b><span>🌱 ساهمت بزراعتها</span></div>
+    <div class="kpi"><b>{{ vol.campaigns }}</b><span>🤝 حملات شاركت بيها</span></div>
+    <div class="kpi"><b>{{ vol.hours|floatformat:"-1" }}</b><span>⭐ ساعة تطوع</span></div>
+  </div>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="card"><div class="row between"><h3>📸 أشجاري</h3><a href="{% url 'trees:my' %}">الكل</a></div>
+      <div class="list">{% for t in trees %}<a class="item-row" href="{{ t.get_absolute_url }}"><span>{{ t.species.emoji }} <b class="ltr">{{ t.tree_code }}</b> · {{ t.species.arabic_name }}<br><span class="small muted">مضى على زراعتها {{ t.age_days }} يوم</span></span><span class="chip">{{ t.get_health_status_display }}</span></a>{% empty %}<p class="muted">ما عندك أشجار بعد.</p>{% endfor %}</div></div>
+    <div class="card"><div class="row between"><h3>🌱 طلباتي</h3><a href="{% url 'tree_requests:my' %}">الكل</a></div>
+      <div class="list">{% for r in requests %}<a class="item-row" href="{{ r.get_absolute_url }}"><span class="ltr">{{ r.request_code }}</span><span class="chip info">{{ r.get_status_display }}</span></a>{% empty %}<p class="muted">لا طلبات. <a href="{% url 'tree_requests:new' %}">اطلب شجرة</a></p>{% endfor %}</div></div>
+    <div class="card"><div class="row between"><h3>🚨 بلاغاتي</h3><a href="{% url 'reports:my' %}">الكل</a></div>
+      <div class="list">{% for r in reports %}<a class="item-row" href="{{ r.get_absolute_url }}"><span><span class="ltr">{{ r.report_code }}</span> · {{ r.get_category_display }}</span><span class="chip warn">{{ r.get_status_display }}</span></a>{% empty %}<p class="muted">لا بلاغات.</p>{% endfor %}</div></div>
+    <div class="card"><div class="row between"><h3>🤝 مشاركاتي</h3><a href="{% url 'campaigns:list' %}">الحملات</a></div>
+      <div class="list">{% for p in participations %}<a class="item-row" href="{{ p.campaign.get_absolute_url }}"><span>{{ p.campaign.title }}<br><span class="small muted">{{ p.campaign.start_date|date:"Y/m/d" }}</span></span><span class="chip">{{ p.get_status_display }}</span></a>{% empty %}<p class="muted">ما شاركت بحملة بعد.</p>{% endfor %}</div></div>
+  </div>
+</div>
+{% endblock %}

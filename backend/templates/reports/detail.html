@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ obj.report_code }} — بلاغ بيئي{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head"><div class="crumbs"><a href="{% url 'reports:my' %}">بلاغاتي</a></div><h1>بلاغ <span class="ltr">{{ obj.report_code }}</span></h1><div class="meta"><span>{{ obj.get_category_display }}</span><span>{{ obj.created_at|date:"Y/m/d H:i" }}</span><span>الأولوية: {{ obj.get_priority_display }}</span></div></div>
+  {% if obj.public_stage >= 0 %}
+  <div class="stages">{% for s in stages %}<div class="{% if forloop.counter0 <= obj.public_stage %}on{% endif %}">{{ s }}</div>{% endfor %}</div>
+  {% else %}<div class="chip bad">{{ obj.get_status_display }}</div>{% endif %}
+  <p class="muted small" style="margin-top:8px">الحالة التفصيلية: {{ obj.get_status_display }}</p>
+  {% if obj.public_note %}<div class="disclaimer" style="margin:14px 0">💬 {{ obj.public_note }}</div>{% endif %}
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">{% if obj.title %}<h3>{{ obj.title }}</h3>{% endif %}<p>{{ obj.description|linebreaksbr }}</p><p class="muted small">📍 {{ obj.address_description }} {{ obj.city }}</p>{% if obj.hide_reporter_identity %}<span class="chip">🕶️ الهوية مخفية</span>{% endif %}</div>
+    <div class="map" style="height:260px" data-point-map data-lat="{{ obj.latitude|stringformat:'f' }}" data-lng="{{ obj.longitude|stringformat:'f' }}" data-health="damaged" data-icon="🚨"></div>
+  </div>
+  {% if obj.media.all %}<div class="previews" style="margin-top:14px">{% for m in obj.media.all %}<img src="{{ m.file.url }}" alt="">{% endfor %}</div>{% endif %}
+</div>
+{% endblock %}

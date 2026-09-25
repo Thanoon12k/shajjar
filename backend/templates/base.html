@@ -1,0 +1,119 @@
+{% load static %}<!doctype html>
+<html lang="ar" dir="rtl" data-theme="hadba" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}شجّر — ازرعها اليوم… وتابع أثرها سنين{% endblock %}</title>
+  <meta name="description" content="{% block description %}#شجّر — منصة تشجير الموصل ونينوى: اطلب شجرة، تابع شجرتك، بلّغ عن تجاوز بيئي، وتطوّع ويانا.{% endblock %}">
+  <meta name="theme-color" content="#1f5130">
+  <meta property="og:title" content="شجّر | Shajjar">
+  <meta property="og:description" content="ازرعها اليوم… وتابع أثرها سنين.">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("shajjar-theme");if(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)t="night";if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  {% block map_css %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">{% endblock %}
+  <link rel="stylesheet" href="{% static 'css/shajjar.css' %}?v=1">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% url 'core:home' as home_url %}{% url 'planting:map' as map_url %}{% url 'species:list' as species_url %}{% url 'campaigns:list' as camp_url %}{% url 'content:list' as learn_url %}{% url 'content:law' as law_url %}{% url 'core:impact' as impact_url %}{% url 'core:activity' as me_url %}
+  {% if DEMO_MODE %}<div class="demo-bar">🧪 نسخة تجريبية للعرض — بعض الأرقام والسجلات توضيحية وتُستبدل ببيانات الفريق الحقيقية. <a href="{% url 'core:about' %}">عن المنصة</a></div>{% endif %}
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="{{ home_url }}" aria-label="شجّر — الرئيسية">
+        <img src="{% static 'img/logo.svg' %}" width="38" height="38" alt="">
+        <span>شجّر<small>ازرعها اليوم… وتابع أثرها سنين</small></span>
+      </a>
+      <nav class="nav" aria-label="القائمة الرئيسية">
+        <a href="{{ map_url }}" {% if request.path == map_url %}class="on"{% endif %}>🗺️ الخريطة</a>
+        <a href="{% url 'tree_requests:new' %}">🌱 أريد شجرة</a>
+        <a href="{% url 'trees:my' %}">📸 شجرتي</a>
+        <a href="{% url 'reports:new' %}">🚨 بلّغ</a>
+        <a href="{{ camp_url }}" {% if request.path == camp_url %}class="on"{% endif %}>🤝 تطوّع</a>
+        <a href="{{ species_url }}" {% if request.path == species_url %}class="on"{% endif %}>🌿 شنو أزرع؟</a>
+        <a href="{{ law_url }}" {% if request.path == law_url %}class="on"{% endif %}>⚖️ القانون</a>
+        <a href="{{ impact_url }}" {% if request.path == impact_url %}class="on"{% endif %}>📊 الأثر</a>
+      </nav>
+      <div class="top-actions">
+        <div class="theme-menu">
+          <button class="icon-btn" type="button" data-theme-toggle aria-haspopup="true" aria-label="تغيير الثيم" title="الثيمات">🎨</button>
+          <div class="theme-pop" id="theme-pop" role="menu">
+            <div class="small muted" style="padding:4px 10px 8px">اختر ثيم الموقع</div>
+            {% for key, name, color in THEMES %}
+            <button type="button" data-set-theme="{{ key }}" data-color="{{ color }}" role="menuitemradio"><span class="swatch" style="background:{{ color }}"></span>{{ name }}</button>
+            {% endfor %}
+          </div>
+        </div>
+        {% if user.is_authenticated %}
+          <a class="icon-btn" href="{% url 'core:notifications' %}" aria-label="الإشعارات">🔔{% if unread_notifications %}<span class="badge-dot">{{ unread_notifications }}</span>{% endif %}</a>
+          {% if user.is_team %}<a class="icon-btn" href="{% url 'core:dashboard' %}" title="لوحة الفريق" aria-label="لوحة الفريق">📊</a>{% endif %}
+          <a class="btn btn-ghost btn-sm" href="{{ me_url }}">👤 {{ user.first_name }}</a>
+        {% else %}
+          <a class="btn btn-primary btn-sm" href="{% url 'accounts:login' %}">دخول</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  {% if messages %}<div class="messages" role="status">{% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}</div>{% endif %}
+
+  <main id="main">{% block content %}{% endblock %}</main>
+
+  <footer class="footer">
+    <div class="pattern"></div>
+    <div class="container" style="position:relative">
+      <div class="cols">
+        <div>
+          <a class="brand" href="{{ home_url }}"><img src="{% static 'img/logo.svg' %}" width="38" height="38" alt=""><span>شجّر<small>#شجّر — الموصل، نينوى</small></span></a>
+          <p class="small" style="margin-top:12px;color:#b9c9b6">منصة لتنظيم حملة #شجّر: من طلب الشجرة إلى زراعتها ومتابعتها سنين، حتى نبني ذاكرة خضراء حقيقية للموصل — مو صور تضيع بين المنشورات.</p>
+        </div>
+        <div><h4>المنصة</h4><ul>
+          <li><a href="{% url 'tree_requests:new' %}">🌱 أريد شجرة</a></li>
+          <li><a href="{% url 'trees:my' %}">📸 شجرتي</a></li>
+          <li><a href="{% url 'reports:new' %}">🚨 بلّغ عن تجاوز</a></li>
+          <li><a href="{{ camp_url }}">🤝 الحملات والتطوع</a></li>
+        </ul></div>
+        <div><h4>تعلّم</h4><ul>
+          <li><a href="{{ species_url }}">🌿 موسوعة شنو أزرع؟</a></li>
+          <li><a href="{{ law_url }}">⚖️ اعرف القانون</a></li>
+          <li><a href="{{ learn_url }}">📚 التوعية ومن الميدان</a></li>
+          <li><a href="{{ impact_url }}">📊 أثرنا بالأرقام</a></li>
+        </ul></div>
+        <div><h4>ساهم</h4><ul>
+          <li><a href="{% url 'content:contribute' %}">💚 ساهم في #شجّر</a></li>
+          <li><a href="{% url 'core:about' %}">🌳 عن المبادرة</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=100088411089966" target="_blank" rel="noopener">📘 صفحة أنس الطائي</a></li>
+        </ul>
+        <form action="{% url 'trees:lookup' %}" method="get" class="row" style="margin-top:14px;gap:6px">
+          <label class="sr-only" for="q-code">رمز الشجرة</label>
+          <input id="q-code" name="code" placeholder="SHJ-000124" style="max-width:160px;direction:ltr;padding:8px 12px">
+          <button class="btn btn-accent btn-sm">🔎</button>
+        </form></div>
+      </div>
+      <div class="copy"><span>© {% now "Y" %} شجّر · Shajjar — مبادرة مجتمعية بيئية</span><span>الخرائط: © OpenStreetMap</span></div>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav" aria-label="تنقل سريع">
+    <a href="{{ home_url }}" {% if request.path == home_url %}class="on"{% endif %}><span class="i">🏠</span>الرئيسية</a>
+    <a href="{{ map_url }}" {% if request.path == map_url %}class="on"{% endif %}><span class="i">🗺️</span>الخريطة</a>
+    <button type="button" data-open-sheet aria-label="إجراء جديد"><span class="plus">+</span></button>
+    <a href="{{ me_url }}" {% if request.path == me_url %}class="on"{% endif %}><span class="i">🌿</span>نشاطي</a>
+    <a href="{% url 'accounts:profile' %}"><span class="i">👤</span>حسابي</a>
+  </nav>
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  <div class="sheet" id="action-sheet" role="dialog" aria-label="إجراء جديد">
+    <div class="grab"></div>
+    <a href="{% url 'tree_requests:new' %}"><span class="em">🌱</span><span>طلب شجرة<small>اطلب أشجار لبيتك، محلك، مدرستك…</small></span></a>
+    <a href="{% url 'trees:my' %}"><span class="em">📸</span><span>تحديث شجرة<small>صوّر شجرتك وخلي نشوف شلون كبرت</small></span></a>
+    <a href="{% url 'reports:new' %}"><span class="em">🚨</span><span>بلاغ بيئي<small>قطع، حريق، صيد جائر، نفايات…</small></span></a>
+  </div>
+
+  <script>window.SHAJJAR={center:[{{ MAP_CENTER.0|stringformat:"f" }},{{ MAP_CENTER.1|stringformat:"f" }}],zoom:{{ MAP_ZOOM }}};</script>
+  {% block map_js %}<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>{% endblock %}
+  <script src="{% static 'js/shajjar.js' %}?v=1"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

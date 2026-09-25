@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}تحديث {{ tree.tree_code }} — شجّر{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head"><div class="crumbs"><a href="{{ tree.get_absolute_url }}">{{ tree.tree_code }}</a></div><h1>📸 تحديث حالة الشجرة</h1><p>{{ tree.species.emoji }} {{ tree.species.arabic_name }} — مضى على زراعتها {{ tree.age_days }} يوم. صورها وخلي نشوف شلون كبرت.</p></div>
+  <form class="form card" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% include "partials/field.html" with field=form.photo %}
+    {% include "partials/field.html" with field=form.height_cm %}
+    {% include "partials/field.html" with field=form.health_status %}
+    {% include "partials/field.html" with field=form.notes %}
+    {{ form.latitude }}{{ form.longitude }}
+    {{ form.non_field_errors }}
+    <button class="btn btn-primary btn-block">إرسال المتابعة 🌳</button>
+  </form>
+</div>
+{% endblock %}

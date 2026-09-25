@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}أريد شجرة — شجّر{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head"><h1>🌱 أريد شجرة</h1><p>#شجّر يوفر الشتلات لمن يريد يزرع أمام البيت أو المحل أو بمدرسة أو بستان — بشرط الاهتمام بيها وسقيها. عبّي الخطوات وفريقنا يراجع طلبك.</p></div>
+  {% if form.errors %}<div class="msg error" style="margin-bottom:14px">راجع الحقول المؤشرة بالأحمر 👇</div>{% endif %}
+  <form class="stepper" method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+    <section class="step"><h3>وين تريد الأشجار؟</h3>{% include "partials/field.html" with field=form.location_type %}</section>
+    <section class="step"><h3>كم شجرة؟</h3>
+      <div class="field"><label for="{{ form.requested_tree_count.id_for_label }}">عدد الأشجار</label>
+        <div class="counter" data-counter><button type="button" data-step="-1" aria-label="نقص">−</button>{{ form.requested_tree_count }}<button type="button" data-step="1" aria-label="زيد">+</button></div>
+        {% if form.requested_tree_count.errors %}<ul class="errorlist">{% for e in form.requested_tree_count.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      {% include "partials/field.html" with field=form.preferred_species %}
+      <p class="small muted">مو متأكد؟ <a href="{% url 'species:list' %}" target="_blank">شوف موسوعة شنو أزرع؟</a></p>
+    </section>
+    <section class="step"><h3>الموقع على الخريطة</h3>
+      <button type="button" class="btn btn-ghost btn-block" id="gps-btn">📍 استخدم موقعي (GPS)</button>
+      <p class="small muted" style="margin:8px 0">أو اضغط على الخريطة لتحديد المكان بالضبط، واسحب الدبوس للتعديل.</p>
+      <div class="map picker" data-picker data-lat="#id_latitude" data-lng="#id_longitude" data-gps="#gps-btn" data-out="#coords-out"></div>
+      <div class="coords" id="coords-out"></div>
+      {{ form.latitude }}{{ form.longitude }}
+      {% if form.latitude.errors %}<ul class="errorlist"><li>{{ form.latitude.errors.0 }}</li></ul>{% endif %}
+      <div class="grid g2" style="margin-top:12px">{% include "partials/field.html" with field=form.city %}{% include "partials/field.html" with field=form.district %}</div>
+      {% include "partials/field.html" with field=form.address_description %}
+    </section>
+    <section class="step"><h3>السقي والرعاية</h3>{% include "partials/field.html" with field=form.watering_commitment wide=1 %}</section>
+    <section class="step"><h3>صور المكان</h3>{% include "partials/field.html" with field=form.photos %}<p class="small muted">صورة للرصيف أو المساحة تساعد الفريق يختار الصنف المناسب.</p></section>
+    <section class="step"><h3>ملاحظات وتواصل</h3>{% include "partials/field.html" with field=form.contact_phone %}{% include "partials/field.html" with field=form.notes %}</section>
+    <button class="btn btn-primary btn-block" style="font-size:1.1rem;padding:16px">إرسال الطلب 🌳</button>
+  </form>
+</div>
+{% endblock %}

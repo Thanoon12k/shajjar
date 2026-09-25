@@ -1,0 +1,6 @@
+<a class="card card-link" href="{{ c.get_absolute_url }}">
+  <div class="cover" style="background:linear-gradient(135deg,var(--accent-2),var(--primary))">{% if c.cover_image %}<img src="{{ c.cover_image.url }}" alt="" loading="lazy">{% else %}<span>🤝</span>{% endif %}<span class="tag chip">{{ c.get_status_display }}</span></div>
+  <h3>🌳 {{ c.title }}</h3>
+  <div class="meta"><span>📅 {{ c.start_date|date:"l j F" }}</span><span>⏰ {{ c.start_date|time:"g:i A" }}</span><span>📍 {{ c.location_name }}</span></div>
+  {% if c.target_tree_count %}<div style="margin-top:8px"><b>🎯 الهدف: {{ c.target_tree_count }} شجرة</b></div>{% endif %}
+</a>

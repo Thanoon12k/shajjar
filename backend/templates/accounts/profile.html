@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}حسابي — شجّر{% endblock %}
+{% block content %}
+<div class="narrow" style="max-width:600px">
+  <div class="page-head"><h1>👤 حسابي</h1><p class="ltr" style="text-align:right">{{ user.email }}</p><span class="chip">{{ user.get_role_display }}</span></div>
+  <form class="form card" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% for f in form %}{% include "partials/field.html" with field=f %}{% endfor %}
+    <button class="btn btn-primary">حفظ</button>
+  </form>
+  <div class="row" style="margin-top:18px">
+    <a class="btn btn-ghost" href="{% url 'accounts:password' %}">🔑 تغيير كلمة المرور</a>
+    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="btn btn-ghost">🚪 تسجيل الخروج</button></form>
+  </div>
+</div>
+{% endblock %}

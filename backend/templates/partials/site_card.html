@@ -1,0 +1,12 @@
+<a class="card card-link" href="{{ s.get_absolute_url }}">
+  <div class="cover">
+    {% if s.cover_image %}<img src="{{ s.cover_image.url }}" alt="{{ s.name }}" loading="lazy">{% else %}<span>{% if s.kind == 'forest' %}🌲{% elif s.kind == 'orchard' %}🌾{% elif s.kind == 'street' %}🛣️{% elif s.kind == 'school' %}🏫{% elif s.kind == 'hospital' %}🏥{% else %}🌳{% endif %}</span>{% endif %}
+    <span class="tag chip"><span class="dot {{ s.health }}"></span>{{ s.get_kind_display }}</span>
+  </div>
+  <h3>{{ s.name }}</h3>
+  <div class="meta"><span>📍 {% if s.district %}{{ s.district }} – {% endif %}{{ s.city }}</span>{% if s.planting_date %}<span>📅 {{ s.planting_date|date:"F Y" }}</span>{% endif %}</div>
+  <div class="row between" style="margin-top:10px">
+    <b>🌳 {{ s.total_trees }} شجرة</b>
+    {% if s.survival_rate is not None %}<span class="chip {% if s.survival_rate >= 85 %}good{% elif s.survival_rate >= 60 %}warn{% else %}bad{% endif %}">نجاح {{ s.survival_rate }}%</span>{% endif %}
+  </div>
+</a>

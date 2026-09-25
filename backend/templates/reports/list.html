@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}بلاغاتي — شجّر{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head row between"><h1>🚨 بلاغاتي</h1><a class="btn btn-danger" href="{% url 'reports:new' %}">+ بلاغ جديد</a></div>
+  <div class="list">{% for r in items %}<a class="item-row" href="{{ r.get_absolute_url }}"><span><span class="code-badge" style="font-size:.95rem;padding:2px 10px">{{ r.report_code }}</span><br><span class="small muted">{{ r.get_category_display }} · {{ r.created_at|date:"Y/m/d" }}</span></span><span class="chip {% if r.status == 'resolved' %}good{% elif r.status == 'rejected' or r.status == 'duplicate' %}bad{% else %}warn{% endif %}">{{ r.get_status_display }}</span></a>{% empty %}<div class="empty"><span class="e">🌿</span>ما عندك بلاغات.</div>{% endfor %}</div>
+</div>
+{% endblock %}

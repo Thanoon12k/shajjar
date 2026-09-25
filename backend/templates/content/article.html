@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ a.title }} — شجّر{% endblock %}
+{% block description %}{{ a.summary|default:a.body|truncatechars:160 }}{% endblock %}
+{% block content %}
+<article class="narrow">
+  <div class="page-head"><div class="crumbs"><a href="{% if a.category.is_legal %}{% url 'content:law' %}{% else %}{% url 'content:list' %}?c={{ a.category.slug }}{% endif %}">{{ a.category.icon }} {{ a.category.name }}</a></div><h1>{{ a.title }}</h1><div class="meta"><span>{{ a.published_at|date:"j F Y" }}</span>{% if a.author %}<span>✍️ {{ a.author }}</span>{% endif %}</div></div>
+  {% if a.needs_legal_review %}<div class="disclaimer" style="margin-bottom:16px">⚖️ هذه المعلومات للتوعية فقط وبانتظار المراجعة القانونية الرسمية — ارجع للنص القانوني أو الجهة المختصة قبل الاعتماد عليها.</div>{% endif %}
+  {% if a.cover_image %}<img src="{{ a.cover_image.url }}" alt="" style="border-radius:20px;margin-bottom:18px">{% endif %}
+  <div class="prose">{{ a.body|linebreaks }}</div>
+  {% if a.source_url %}<p><a href="{{ a.source_url }}" target="_blank" rel="noopener">📘 المنشور الأصلي ↗</a></p>{% endif %}
+  {% if related %}<h2 style="margin-top:36px">اقرأ أيضاً</h2><div class="list">{% for r in related %}<a class="item-row" href="{{ r.get_absolute_url }}"><span>{{ r.title }}</span><span>←</span></a>{% endfor %}</div>{% endif %}
+</article>
+{% endblock %}

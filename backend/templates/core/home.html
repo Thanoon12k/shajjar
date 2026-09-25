@@ -1,0 +1,147 @@
+{% extends "base.html" %}{% load humanize %}
+{% block content %}
+<section class="hero">
+  <div class="leaf-fall" aria-hidden="true"></div>
+  <div class="container">
+    <div>
+      <span class="eyebrow">🌳 الموصل · نينوى · العراق</span>
+      <h1>ازرعها <span class="hl">اليوم</span>…<br>وتابع أثرها سنين.</h1>
+      <p class="lead">#شجّر مو بس حملة تشجير — هي ذاكرة خضراء للموصل. نوفّر الشتلات، نزرعها وياك، ونتابع كل شجرة من يوم زراعتها لحد ما تصير ظل للشارع.</p>
+      <div class="row" style="margin-top:18px">
+        <a class="btn btn-accent" href="{% url 'tree_requests:new' %}">🌱 أريد أزرع</a>
+        <a class="btn btn-light" href="{% url 'planting:map' %}">🗺️ خريطة شجّر</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="ico">🌳</span><b data-count="{{ stats.trees }}">{{ stats.trees|intcomma }}</b><span>شجرة مزروعة</span></div>
+        <div class="stat"><span class="ico">📍</span><b data-count="{{ stats.sites }}">{{ stats.sites }}</b><span>موقع تشجير</span></div>
+        <div class="stat"><span class="ico">👥</span><b data-count="{{ stats.volunteers }}">{{ stats.volunteers }}</b><span>متطوع</span></div>
+        <div class="stat"><span class="ico">💚</span><b data-count="{{ stats.survival_rate }}" data-suffix="٪">{{ stats.survival_rate }}%</b><span>نسبة النجاح</span></div>
+      </div>
+    </div>
+    <div class="hero-art">{% include "partials/hero_tree.svg" %}</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="quick">
+    <a class="qa q1" href="{% url 'tree_requests:new' %}"><span class="em">🌱</span><b>أريد شجرة</b><span>للبيت، المحل، المدرسة، البستان…</span></a>
+    <a class="qa q2" href="{% url 'trees:my' %}"><span class="em">📸</span><b>تابع شجرتك</b><span>صوّرها وخلي نشوف شلون كبرت</span></a>
+    <a class="qa q3" href="{% url 'reports:new' %}"><span class="em">🚨</span><b>بلّغ عن تجاوز</b><span>قطع، حريق، صيد جائر، نفايات</span></a>
+    <a class="qa q4" href="{% url 'campaigns:list' %}"><span class="em">🤝</span><b>تطوّع ويانا</b><span>الحملات القادمة بمنطقتك</span></a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal"><div><span class="eyebrow">رحلة الشجرة</span><h2>من الطلب… إلى قياس الأثر</h2><p>كل شجرة تمر بهاي المراحل، وكل مرحلة موثقة على المنصة.</p></div></div>
+    <ol class="journey reveal">
+      <li><span class="e">📝</span><b>طلب</b><small>تحدد المكان والعدد</small></li>
+      <li><span class="e">✅</span><b>موافقة</b><small>الفريق يراجع الموقع</small></li>
+      <li><span class="e">🚚</span><b>توزيع</b><small>تستلم الشتلات</small></li>
+      <li><span class="e">🌱</span><b>زراعة</b><small>بالصنف المناسب للمكان</small></li>
+      <li><span class="e">📸</span><b>توثيق</b><small>كل شجرة لها Tree ID</small></li>
+      <li><span class="e">🔁</span><b>متابعة</b><small>صور كل كم شهر</small></li>
+      <li><span class="e">🛡️</span><b>حماية</b><small>بلاغات التجاوز</small></li>
+      <li><span class="e">📊</span><b>قياس الأثر</b><small>نسبة النجاح الحقيقية</small></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">🗺️ خريطة الموصل</span><h2>وين زرعنا؟</h2><p>كل نقطة موقع تشجير حقيقي — اضغط عليها وشوف التفاصيل.</p></div>
+      <a class="btn btn-ghost" href="{% url 'planting:map' %}">الخريطة الكاملة ←</a>
+    </div>
+    <div class="map reveal" data-sites-map="{% url 'planting:data' %}"></div>
+    <div class="legend"><span><i class="dot"></i> بحالة جيدة</span><span><i class="dot attention"></i> تحتاج متابعة</span><span><i class="dot damaged"></i> متضررة</span><span><i class="dot forest"></i> غابة / مشروع تشجير</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid g2" style="align-items:center">
+    <div class="reveal">
+      <span class="eyebrow">قبل / بعد</span>
+      <h2>غابة الموصل رجعت تتنفس</h2>
+      <p>المكان اللي احترق قبل سنوات بغابة الموصل الأيمن — «أسوار البرج العاجي» — رجعت له الحياة بأشجار النبك والألبيزيا والأثل. التنوع مدروس: كل نوع يستفاد من العناصر بطريقة مختلفة، والنتيجة غابة حقيقية.</p>
+      <p class="muted small">اسحب الخط للمقارنة. الرسم توضيحي — صور قبل/بعد الحقيقية تنرفع لكل موقع من لوحة الإدارة.</p>
+      <a class="btn btn-primary" href="{% url 'planting:map' %}">شوف مواقعنا</a>
+    </div>
+    <div class="reveal">{% include "partials/ba_illustration.html" %}</div>
+  </div>
+</section>
+
+{% if sites %}
+<section class="section-sm">
+  <div class="container">
+    <div class="sec-head reveal"><div><span class="eyebrow">🌲 مواقع #شجّر</span><h2>آخر مواقع التشجير</h2></div><a class="btn btn-ghost" href="{% url 'core:impact' %}">كل الأرقام ←</a></div>
+    <div class="grid g3">{% for s in sites %}<div class="reveal">{% include "partials/site_card.html" %}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if stories %}
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal"><div><span class="eyebrow">📣 من الميدان</span><h2>قصص #شجّر</h2><p>من منشورات أنس الطائي وفريق الحملة.</p></div><a class="btn btn-ghost" href="{% url 'content:list' %}?c=field">كل القصص ←</a></div>
+    <div class="grid g2">
+      {% for a in stories %}
+      <article class="card story reveal">
+        <p>{{ a.summary|default:a.body|truncatechars:260 }}</p>
+        <footer><a href="{{ a.get_absolute_url }}"><b>{{ a.title }}</b></a>{% if a.source_url %}<a href="{{ a.source_url }}" target="_blank" rel="noopener">المنشور الأصلي ↗</a>{% endif %}</footer>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section-sm">
+  <div class="container grid g2" style="align-items:center">
+    <div class="reveal">
+      <span class="eyebrow">🌿 موسوعة شنو أزرع؟</span>
+      <h2>مو كل شجرة تعيش ببلدك</h2>
+      <p>كل نوع وصنف له بيئته الخاصة. قلّنا وين تريد تزرع، شكد الشمس قوية، وشكد الماء متوفر — ونقترح عليك الأنسب.</p>
+      <form class="card" action="{% url 'species:list' %}" method="get" style="display:grid;gap:10px">
+        <select name="place" aria-label="مكان الزراعة"><option value="streets">🛣️ رصيف / شارع</option><option value="gardens">🏠 بيت / حديقة</option><option value="farms">🌾 بستان</option><option value="public_spaces">🌲 غابة / مكان عام</option></select>
+        <select name="sun" aria-label="الشمس"><option value="strong">☀️ شمس قوية</option><option value="partial">⛅ شمس جزئية</option></select>
+        <select name="water" aria-label="الماء"><option value="low">💧 ماء قليل</option><option value="medium">💧💧 متوسط</option><option value="high">💧💧💧 متوفر</option></select>
+        <button class="btn btn-primary">اقترح عليّ 🌳</button>
+      </form>
+    </div>
+    <div class="grid g2 reveal">
+      {% for sp in species %}
+      <a class="card card-link" href="{% url 'species:detail' sp.pk %}"><div style="font-size:2.4rem">{{ sp.emoji }}</div><h3>{{ sp.arabic_name }}</h3><div class="small muted">{{ sp.scientific_name }}</div><div class="small" style="margin-top:6px">☀️ حرارة: {{ sp.get_heat_tolerance_display }} · 💧 {{ sp.get_water_requirement_display }}</div></a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if campaigns %}
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal"><div><span class="eyebrow">🤝 تطوّع</span><h2>الحملات القادمة</h2></div><a class="btn btn-ghost" href="{% url 'campaigns:list' %}">كل الحملات ←</a></div>
+    <div class="grid g3">{% for c in campaigns %}<div class="reveal">{% include "partials/campaign_card.html" %}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if articles %}
+<section class="section-sm">
+  <div class="container">
+    <div class="sec-head reveal"><div><span class="eyebrow">📚 توعية</span><h2>تعلّم ويانا</h2></div><a class="btn btn-ghost" href="{% url 'content:list' %}">المزيد ←</a></div>
+    <div class="grid g3">{% for a in articles %}<a class="card card-link reveal" href="{{ a.get_absolute_url }}"><span class="chip">{{ a.category.icon }} {{ a.category.name }}</span><h3 style="margin-top:10px">{{ a.title }}</h3><p class="muted">{{ a.summary|truncatechars:140 }}</p></a>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>ساهم بشجرة… تبقى ظل لسنين</h2>
+      <p style="max-width:36em;opacity:.9">كلفة زراعة شجرة، دعم حملة، أو دعم منظومة ري — كل مساهمة توصل للأرض وتنقاس بالأرقام.</p>
+      <div class="row"><a class="btn btn-accent" href="{% url 'content:contribute' %}">💚 ساهم في #شجّر</a><a class="btn btn-light" href="{% url 'content:law' %}">⚖️ اعرف القانون البيئي</a></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

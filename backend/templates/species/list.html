@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}شنو أزرع؟ — موسوعة أشجار شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>🌿 شنو أزرع؟</h1><p>«ما كل شجرة تشوفها ببقية البلدان يعني تعيش ببلدك». اختر مكانك وظروفه، ونرتب لك الأنواع حسب ملاءمتها لمناخ الموصل.</p></div>
+  <form class="card grid g4" method="get" style="align-items:end">
+    <div class="field"><label for="f-place">🏠 مكان الزراعة</label><select id="f-place" name="place"><option value="">أي مكان</option>{% for k, v in places %}<option value="{{ k }}" {% if sel.place == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="f-sun">☀️ الشمس</label><select id="f-sun" name="sun"><option value="">غير محدد</option>{% for k, v in suns %}<option value="{{ k }}" {% if sel.sun == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="f-water">💧 الماء</label><select id="f-water" name="water"><option value="">غير محدد</option>{% for k, v in waters %}<option value="{{ k }}" {% if sel.water == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+    <button class="btn btn-primary">اقترح 🌳</button>
+  </form>
+  {% if asked %}<h2 style="margin:30px 0 14px">مناسب لك 👇</h2>{% else %}<h2 style="margin:30px 0 14px">كل الأنواع</h2>{% endif %}
+  <div class="grid g3">
+    {% for sp in species %}
+    <a class="card card-link reveal" href="{% url 'species:detail' sp.pk %}">
+      <div class="row between"><span style="font-size:2.6rem">{{ sp.emoji }}</span>{% if asked %}<span class="stars" aria-label="{{ sp.stars }} من 5">{% for i in "12345" %}{% if forloop.counter <= sp.stars %}★{% else %}☆{% endif %}{% endfor %}</span>{% endif %}</div>
+      <h3>{{ sp.arabic_name }}</h3>
+      <div class="small muted ltr">{{ sp.scientific_name }}</div>
+      <div class="stack" style="margin-top:12px">
+        <div class="trait"><span>☀️ تحمل الحرارة</span><div class="meter"><i style="width:{% widthratio sp.heat_tolerance 5 100 %}%"></i></div><span>{{ sp.get_heat_tolerance_display }}</span></div>
+        <div class="trait"><span>🏜️ تحمل الجفاف</span><div class="meter"><i style="width:{% widthratio sp.drought_tolerance 5 100 %}%"></i></div><span>{{ sp.get_drought_tolerance_display }}</span></div>
+        <div class="trait"><span>📈 سرعة النمو</span><div class="meter"><i style="width:{% widthratio sp.growth_speed 5 100 %}%"></i></div><span>{{ sp.get_growth_speed_display }}</span></div>
+      </div>
+      <div class="row" style="margin-top:12px;gap:6px">{% for l in sp.placement_labels %}<span class="chip">{{ l }}</span>{% endfor %}{% if sp.bird_friendly %}<span class="chip good">🐦 للطيور</span>{% endif %}</div>
+    </a>
+    {% empty %}<div class="empty"><span class="e">🌱</span>ما تمت إضافة أنواع بعد.</div>{% endfor %}
+  </div>
+  <p class="muted small" style="margin-top:20px">💡 لاحقاً: ترفع صورة المكان وتقترح المنصة الأنسب بالذكاء الاصطناعي.</p>
+</div>
+{% endblock %}

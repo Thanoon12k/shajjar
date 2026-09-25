@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}الحملات والتطوع — شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>🤝 تطوّع ويانا</h1><p>الحملات القادمة لـ #شجّر. سجّل، احضر، وازرع — ونحسب لك الأشجار اللي ساهمت بيها وساعات تطوعك.</p></div>
+  <h2>الحملات القادمة</h2>
+  <div class="grid g3">{% for c in upcoming %}{% include "partials/campaign_card.html" %}{% empty %}<div class="empty"><span class="e">📅</span>ماكو حملات قادمة حالياً — تابعنا قريباً.</div>{% endfor %}</div>
+  {% if past %}<h2 style="margin-top:40px">حملات منجزة</h2><div class="grid g3">{% for c in past %}{% include "partials/campaign_card.html" %}{% endfor %}</div>{% endif %}
+</div>
+{% endblock %}

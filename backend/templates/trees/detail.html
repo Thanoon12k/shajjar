@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ tree.tree_code }} — {{ tree.species }} | شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head">
+    <div class="crumbs">ملف شجرة</div>
+    <div class="row"><span class="code-badge">{{ tree.tree_code }}</span><span class="chip {% if tree.health_status == 'excellent' or tree.health_status == 'good' %}good{% elif tree.health_status == 'needs_care' %}warn{% else %}bad{% endif %}">💚 {{ tree.get_health_status_display }}</span>{% if tree.status != 'active' %}<span class="chip bad">{{ tree.get_status_display }}</span>{% endif %}</div>
+    <h1 style="margin-top:12px">{{ tree.species.emoji }} {{ tree.nickname|default:tree.species.arabic_name }}</h1>
+  </div>
+  <div class="grid g2">
+    <div class="stack">
+      <div class="card">
+        <dl class="kv">
+          <dt>🌳 النوع</dt><dd><a href="{% url 'species:detail' tree.species.pk %}">{{ tree.species.arabic_name }}</a></dd>
+          <dt>📍 الموقع</dt><dd>{{ tree.place }}</dd>
+          <dt>📅 زُرعت</dt><dd>{{ tree.planting_date|date:"j/n/Y" }} <span class="muted">(قبل {{ tree.age_days }} يوم)</span></dd>
+          <dt>👤 الراعي</dt><dd>{{ tree.caretaker_display }}</dd>
+          <dt>📏 آخر طول</dt><dd>{% if tree.height_cm %}{{ tree.height_cm }} cm{% else %}—{% endif %}</dd>
+          <dt>💚 الحالة</dt><dd>{{ tree.get_health_status_display }}</dd>
+          {% if tree.site %}<dt>🌲 المشروع</dt><dd><a href="{{ tree.site.get_absolute_url }}">{{ tree.site.name }}</a></dd>{% endif %}
+        </dl>
+        {% if can_update %}<a class="btn btn-primary btn-block" style="margin-top:16px" href="{% url 'trees:update' tree.tree_code %}">📸 تحديث حالة الشجرة</a>{% endif %}
+      </div>
+      <div class="card row" style="gap:18px">
+        <div class="qr-box"><img src="{% url 'trees:qr' tree.tree_code %}" alt="QR {{ tree.tree_code }}" width="170" height="170"></div>
+        <div><h3>رمز QR للشجرة</h3><p class="muted small">اطبعه وعلّقه على الشجرة — أي شخص يصوّره يوصل لهذا الملف.</p><a class="btn btn-ghost btn-sm" href="{% url 'trees:qr' tree.tree_code %}?download=1">⬇️ تحميل QR</a></div>
+      </div>
+      {% if tree.coords %}<div class="map" style="height:280px" data-point-map data-lat="{{ tree.coords.0|stringformat:'f' }}" data-lng="{{ tree.coords.1|stringformat:'f' }}" data-zoom="16"></div>{% endif %}
+    </div>
+    <div class="card">
+      <h2>🕰️ رحلة الشجرة</h2>
+      <ol class="timeline">
+        <li class="done"><span class="n">🌱</span><b>يوم الزراعة</b><span class="muted small">{{ tree.planting_date|date:"j F Y" }}</span></li>
+        {% for u in updates %}
+        <li class="{% if u.health_status == 'dead' %}rejected{% else %}done{% endif %}">
+          <span class="n">📸</span>
+          <b>{{ u.created_at|date:"j F Y" }} — {{ u.get_health_status_display }}{% if u.verified %} <span class="chip good">✓ موثّق</span>{% endif %}</b>
+          <span class="muted small">{% if u.height_cm %}📏 {{ u.height_cm }} سم · {% endif %}{% if u.user %}👤 {{ u.user.first_name }}{% endif %}</span>
+          {% if u.notes %}<p style="margin:4px 0 0">{{ u.notes }}</p>{% endif %}
+          {% if u.photo %}<div class="tl-photo"><img src="{{ u.photo.url }}" alt="صورة متابعة" loading="lazy"></div>{% endif %}
+        </li>
+        {% endfor %}
+        {% if tree.status == 'active' %}<li class="current"><span class="n">🌳</span><b>تكبر وياك…</b><span class="muted small">المتابعة القادمة بعد كم شهر</span></li>{% endif %}
+      </ol>
+    </div>
+  </div>
+</div>
+{% endblock %}

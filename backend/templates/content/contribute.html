@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load humanize %}
+{% block title %}ساهم في #شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>💚 ساهم في #شجّر</h1><p>كل مساهمة تتحول لشتلة بالأرض ورقم على المنصة. حالياً ماكو دفع إلكتروني داخل الموقع — تظهر هنا فقط وسائل المساهمة الرسمية اللي تعتمدها المؤسسة.</p></div>
+  {% if goals %}<div class="grid g3">{% for g in goals %}<div class="card goal"><div class="e">{{ g.icon }}</div><h3>{{ g.title }}</h3><p class="muted">{{ g.description }}</p>{% if g.amount_iqd %}<b>≈ {{ g.amount_iqd|intcomma }} د.ع</b>{% endif %}</div>{% endfor %}</div>{% endif %}
+  <h2 style="margin-top:36px">وسائل المساهمة الرسمية</h2>
+  <div class="grid g2">
+    {% for m in methods %}
+    <div class="card row" style="align-items:flex-start;gap:18px">
+      {% if m.qr_image %}<div class="qr-box"><img src="{{ m.qr_image.url }}" alt="QR"></div>{% endif %}
+      <div><h3>{{ m.name }}</h3>{% if m.description %}<p class="muted">{{ m.description }}</p>{% endif %}{% if m.account_information %}<span class="acct">{{ m.account_information }}</span>{% endif %}{% if m.instructions %}<p class="small" style="margin-top:10px">{{ m.instructions|linebreaksbr }}</p>{% endif %}</div>
+    </div>
+    {% empty %}<div class="empty"><span class="e">🤝</span>يتم تحديث وسائل المساهمة الرسمية من قبل إدارة المؤسسة قريباً.</div>{% endfor %}
+  </div>
+  <div class="card" style="margin-top:30px"><h3>🔍 الشفافية</h3><p class="muted">مستقبلاً: تقارير شهرية — التبرعات ← الشتلات المنتجة ← المزروعة ← الجاهزة للزراعة. شوف <a href="{% url 'core:impact' %}">أرقام الأثر الحالية</a>.</p></div>
+</div>
+{% endblock %}
