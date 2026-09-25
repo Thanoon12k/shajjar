@@ -15,13 +15,9 @@ What the script does:
 2. Creates the web app `shajjar.pythonanywhere.com` (Python 3.11) if it doesn't exist yet, and turns on forced HTTPS.
 3. Maps static files: `/static/` → `backend/staticfiles`, `/media/` → `backend/media`.
 4. Writes the WSGI file.
-5. With `--setup`, schedules `scripts/pa_setup.sh` to run about 2 minutes later. Free accounts can't drive consoles through the API, so a scheduled task does the work instead. The setup script:
-   - runs `pip install --user`
-   - creates `.env` on the server with a random `SECRET_KEY` and `DEBUG=false`
-   - runs `migrate`, `collectstatic` and `seed_shajjar --demo`
-   - reloads the site.
-
-   The output goes to `/home/SHAJJAR/shajjar_setup.log`, which also contains the generated team login. Delete the scheduled task afterwards; it runs daily and is harmless but unnecessary.
+5. With `--setup`, it tries to schedule `scripts/pa_setup.sh`. **Free accounts can't use scheduled tasks** (the API returns 403), and API consoles only work after they've been opened once in a browser. On a free account, use one of these instead:
+   - **No-console route (how the live site was deployed):** PythonAnywhere already ships Django 5.0.9 and Pillow 10.4 for Python 3.11, and `segno` is bundled in `backend/_vendor/`. So you can build the database locally with Django 5.0.x (`migrate` + `seed_shajjar --demo`), then upload it as `backend/db.sqlite3` together with a `backend/.env` (random `SECRET_KEY`, `DEBUG=false`, `DEMO_MODE=true`). Map `/static/` → `backend/static` and `/static/admin/` → `/usr/local/lib/python3.11/site-packages/django/contrib/admin/static/admin`, then reload. No `collectstatic` is needed.
+   - **Console route:** open a Bash console on PythonAnywhere once and run `bash ~/shajjar/scripts/pa_setup.sh`.
 
 To update the code later, run `python scripts/deploy_pythonanywhere.py --user SHAJJAR`. After a model change, open a Bash console and run `cd ~/shajjar/backend && python3.11 manage.py migrate`.
 

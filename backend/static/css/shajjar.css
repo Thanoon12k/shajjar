@@ -454,3 +454,8 @@ details.qa-item[open] summary::after { content: "−"; }
 
 .demo-bar { background: var(--accent-2); color: #2b1d10; text-align: center; font-size: .85rem; font-weight: 700; padding: 5px 12px; }
 .demo-bar a { color: #2b1d10; text-decoration: underline; }
+.nav a { white-space: nowrap; padding: 8px 9px; font-size: .94rem; }
+.brand span, .brand small { white-space: nowrap; }
+@media (max-width: 1320px) { .nav .xl { display: none; } }
+@media (max-width: 1120px) { .brand small { display: none; } }
+@media (max-width: 480px) { .brand small { display: none; } .topbar .container { gap: 10px; } }

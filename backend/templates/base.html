@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   {% block map_css %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">{% endblock %}
-  <link rel="stylesheet" href="{% static 'css/shajjar.css' %}?v=1">
+  <link rel="stylesheet" href="{% static 'css/shajjar.css' %}?v=2">
   {% block head %}{% endblock %}
 </head>
 <body>
@@ -33,8 +33,8 @@
         <a href="{% url 'reports:new' %}">🚨 بلّغ</a>
         <a href="{{ camp_url }}" {% if request.path == camp_url %}class="on"{% endif %}>🤝 تطوّع</a>
         <a href="{{ species_url }}" {% if request.path == species_url %}class="on"{% endif %}>🌿 شنو أزرع؟</a>
-        <a href="{{ law_url }}" {% if request.path == law_url %}class="on"{% endif %}>⚖️ القانون</a>
-        <a href="{{ impact_url }}" {% if request.path == impact_url %}class="on"{% endif %}>📊 الأثر</a>
+        <a class="xl{% if request.path == law_url %} on{% endif %}" href="{{ law_url }}">⚖️ القانون</a>
+        <a class="xl{% if request.path == impact_url %} on{% endif %}" href="{{ impact_url }}">📊 الأثر</a>
       </nav>
       <div class="top-actions">
         <div class="theme-menu">

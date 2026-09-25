@@ -44,7 +44,9 @@ class PA:
             body = urllib.parse.urlencode(data).encode()
             headers["Content-Type"] = "application/x-www-form-urlencoded"
         r = urllib.request.Request(url, data=body, headers=headers, method=method)
-        for attempt in range(4):
+        attempt = 0
+        while attempt < 4:
+            attempt += 1
             try:
                 with urllib.request.urlopen(r, timeout=60) as resp:
                     raw = resp.read()
@@ -53,12 +55,17 @@ class PA:
                 raw = e.read()
                 if e.code in ok:
                     return e.code, raw
-                if e.code >= 500 and attempt < 3:
+                if e.code == 429:  # API allows ~40 requests/minute
+                    wait = next((int(w) for w in raw.decode(errors="ignore").split() if w.isdigit()), 30)
+                    time.sleep(wait + 1)
+                    attempt = 0
+                    continue
+                if e.code >= 500 and attempt < 4:
                     time.sleep(2 ** attempt)
                     continue
                 return e.code, raw
             except urllib.error.URLError:
-                if attempt == 3:
+                if attempt >= 4:
                     raise
                 time.sleep(2 ** attempt)
 
@@ -83,6 +90,7 @@ def main():
     ap.add_argument("--python", default="python311")
     ap.add_argument("--setup", action="store_true", help="schedule pa_setup.sh on the server")
     ap.add_argument("--skip-upload", action="store_true")
+    ap.add_argument("--start", type=int, default=0, help="resume the upload from file N")
     a = ap.parse_args()
     token = os.environ.get("PA_API_TOKEN")
     if not token:
@@ -95,6 +103,8 @@ def main():
     if not a.skip_upload:
         files = list(iter_files())
         for i, p in enumerate(files, 1):
+            if i <= a.start:
+                continue
             pa.upload(f"{home}/{p.relative_to(ROOT).as_posix()}", p.read_bytes())
             if i % 20 == 0 or i == len(files):
                 print(f"uploaded {i}/{len(files)}")

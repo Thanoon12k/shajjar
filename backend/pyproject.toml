@@ -1,6 +1,6 @@
 [tool.ruff]
 line-length = 200
-extend-exclude = ["*/migrations/*"]
+extend-exclude = ["*/migrations/*", "_vendor"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]

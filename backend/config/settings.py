@@ -1,8 +1,11 @@
 """Shajjar — Django settings. All secrets come from the environment or backend/.env."""
 import os
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Pure-python fallbacks (e.g. segno) for hosts where pip is unavailable; installed packages win.
+sys.path.append(str(BASE_DIR / "_vendor"))
 
 
 def _load_env_file(path):
