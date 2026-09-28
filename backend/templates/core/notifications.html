@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}الإشعارات — شجّر{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head row between"><h1>🔔 الإشعارات</h1>{% if unread_notifications %}<form method="post" action="{% url 'core:notifications_read_all' %}">{% csrf_token %}<button class="btn btn-ghost btn-sm">تعليم الكل كمقروء</button></form>{% endif %}</div>
+  <div class="list">
+    {% for n in items %}
+    <div class="notif {% if not n.is_read %}unread{% endif %}">
+      <span style="font-size:1.5rem">{% if n.type == 'tree' %}🌳{% elif n.type == 'request' %}🌱{% elif n.type == 'report' %}🚨{% elif n.type == 'campaign' %}🤝{% else %}🔔{% endif %}</span>
+      <div style="flex:1"><b>{{ n.title }}</b>{% if n.body %}<div class="muted small">{{ n.body }}</div>{% endif %}<div class="small muted">{{ n.created_at|timesince }}</div></div>
+      {% if n.link or not n.is_read %}<form method="post" action="{% url 'core:notification_read' n.pk %}">{% csrf_token %}<button class="btn btn-ghost btn-sm">{% if n.link %}فتح{% else %}✓{% endif %}</button></form>{% endif %}
+    </div>
+    {% empty %}<div class="empty"><span class="e">🔕</span>ماكو إشعارات.</div>{% endfor %}
+  </div>
+</div>
+{% endblock %}

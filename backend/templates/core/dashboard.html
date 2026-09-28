@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load humanize %}
+{% block title %}لوحة الفريق — شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head row between"><div><h1>📊 شجّر — لوحة الفريق</h1><p>نظرة عامة على العمليات. الإدارة التفصيلية (موافقات، تسجيل أشجار، معالجة بلاغات) من <a href="/admin/">لوحة الإدارة</a>.</p></div><a class="btn btn-primary" href="/admin/">⚙️ لوحة الإدارة</a></div>
+  <div class="kpis">
+    <div class="kpi"><b>{{ stats.trees|intcomma }}</b><span>🌳 الأشجار</span></div>
+    <div class="kpi warn"><b>{{ stats.pending_requests }}</b><span>🌱 طلبات بانتظار المراجعة</span></div>
+    <div class="kpi warn"><b>{{ stats.needs_care }}</b><span>🟡 تحتاج متابعة</span></div>
+    <div class="kpi alert"><b>{{ stats.new_reports }}</b><span>🚨 بلاغات جديدة</span></div>
+    <div class="kpi"><b>{{ stats.volunteers }}</b><span>👥 متطوعون</span></div>
+  </div>
+
+  <form class="card row" method="get" style="margin-top:22px;align-items:end">
+    <div class="field"><label for="d-city">المدينة</label><select id="d-city" name="city"><option value="">الكل</option>{% for c in cities %}<option {% if sel.city == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="d-district">الحي</label><select id="d-district" name="district"><option value="">الكل</option>{% for d in districts %}<option {% if sel.district == d %}selected{% endif %}>{{ d }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="d-year">سنة الزراعة</label><select id="d-year" name="year"><option value="">الكل</option>{% for y in years %}<option {% if sel.year == y|stringformat:'s' %}selected{% endif %}>{{ y }}</option>{% endfor %}</select></div>
+    <button class="btn btn-primary">تصفية</button>
+  </form>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h3>نسبة النجاح {% if sel.city or sel.district or sel.year %}<span class="muted small">({{ sel.city }} {{ sel.district }} {{ sel.year }})</span>{% endif %}</h3>
+      <table class="tbl"><tr><td>مزروعة</td><td><b>{{ f.planted|intcomma }}</b></td></tr><tr><td>حية</td><td><b style="color:var(--good)">{{ f.alive|intcomma }}</b></td></tr><tr><td>متضررة</td><td><b style="color:var(--warn)">{{ f.damaged|intcomma }}</b></td></tr><tr><td>ميتة</td><td><b style="color:var(--bad)">{{ f.dead|intcomma }}</b></td></tr><tr><td>نسبة النجاح</td><td><b style="font-size:1.4rem">{{ f.rate }}%</b></td></tr></table>
+    </div>
+    <div class="map" style="height:auto;min-height:320px" data-sites-map="{% url 'planting:data' %}{% if sel.city %}?city={{ sel.city|urlencode }}{% endif %}"></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><div class="row between"><h3>🌱 طلبات مفتوحة</h3><a href="/admin/tree_requests/treerequest/">الكل</a></div>
+      <div class="tbl-wrap"><table class="tbl"><tr><th>الرقم</th><th>المواطن</th><th>العدد</th><th>الحالة</th></tr>{% for r in requests %}<tr><td><a class="ltr" href="/admin/tree_requests/treerequest/{{ r.pk }}/change/">{{ r.request_code }}</a></td><td>{{ r.user }}</td><td>{{ r.requested_tree_count }}</td><td><span class="chip info">{{ r.get_status_display }}</span></td></tr>{% empty %}<tr><td colspan="4" class="muted">لا يوجد</td></tr>{% endfor %}</table></div></div>
+    <div class="card"><div class="row between"><h3>🚨 بلاغات مفتوحة</h3><a href="/admin/reports/environmentalreport/">الكل</a></div>
+      <div class="tbl-wrap"><table class="tbl"><tr><th>الرقم</th><th>النوع</th><th>الأولوية</th><th>الحالة</th></tr>{% for r in reports %}<tr><td><a class="ltr" href="/admin/reports/environmentalreport/{{ r.pk }}/change/">{{ r.report_code }}</a></td><td>{{ r.get_category_display }}</td><td>{{ r.get_priority_display }}</td><td><span class="chip warn">{{ r.get_status_display }}</span></td></tr>{% empty %}<tr><td colspan="4" class="muted">لا يوجد</td></tr>{% endfor %}</table></div></div>
+    <div class="card"><h3>حالات الطلبات</h3><div class="row" style="gap:6px">{% for l, n in req_status %}<span class="chip">{{ l }}: {{ n }}</span>{% endfor %}</div><h3 style="margin-top:16px">حالات البلاغات</h3><div class="row" style="gap:6px">{% for l, n in rep_status %}<span class="chip">{{ l }}: {{ n }}</span>{% endfor %}</div></div>
+    <div class="card"><h3>المواقع</h3><div class="tbl-wrap"><table class="tbl"><tr><th>الموقع</th><th>مزروعة</th><th>حية</th><th>نجاح</th></tr>{% for s in sites %}<tr><td><a href="{{ s.get_absolute_url }}">{{ s.name }}</a></td><td>{{ s.total_trees }}</td><td>{{ s.alive_trees }}</td><td>{{ s.survival_rate|default:"—" }}%</td></tr>{% endfor %}</table></div></div>
+  </div>
+  {% if trees %}<div class="card" style="margin-top:18px"><h3>🌳 أشجار مسجلة</h3><div class="tbl-wrap"><table class="tbl"><tr><th>الرمز</th><th>النوع</th><th>المكان</th><th>الزراعة</th><th>الحالة</th></tr>{% for t in trees %}<tr><td><a class="ltr" href="{{ t.get_absolute_url }}">{{ t.tree_code }}</a></td><td>{{ t.species }}</td><td>{{ t.place }}</td><td>{{ t.planting_date|date:"Y/m/d" }}</td><td>{{ t.get_health_status_display }}</td></tr>{% endfor %}</table></div></div>{% endif %}
+</div>
+{% endblock %}

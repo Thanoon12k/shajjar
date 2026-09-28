@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ obj.request_code }} — طلب شجرة{% endblock %}
+{% block content %}
+<div class="narrow">
+  {% if is_new %}
+  <div class="card success-card" style="margin-top:30px"><div class="big">🌳</div><h2>تم استلام طلبك</h2><p>رقم الطلب:</p><span class="code-badge" style="font-size:1.6rem">{{ obj.request_code }}</span><p class="muted" style="margin-top:14px">فريق #شجّر راح يراجع الطلب من لوحة الإدارة ويبلغك بكل خطوة هنا وبالإشعارات.</p></div>
+  {% endif %}
+  <div class="page-head"><div class="crumbs"><a href="{% url 'tree_requests:my' %}">طلباتي</a></div><h1>طلب <span class="ltr">{{ obj.request_code }}</span></h1></div>
+  <div class="grid g2">
+    <div class="card"><h3>حالة الطلب</h3>
+      <ol class="timeline">{% for label, state in obj.timeline %}<li class="{{ state }}"><span class="n">{% if state == 'done' %}✓{% elif state == 'rejected' %}✕{% else %}{{ forloop.counter }}{% endif %}</span><b>{{ label }}</b>{% if state == 'current' %}<span class="small muted">المرحلة الحالية</span>{% endif %}</li>{% endfor %}</ol>
+      {% if obj.public_note %}<div class="disclaimer">💬 {{ obj.public_note }}</div>{% endif %}
+      {% if obj.distribution_date %}<p style="margin-top:10px">📦 موعد الاستلام: <b>{{ obj.distribution_date|date:"l j F Y" }}</b></p>{% endif %}
+    </div>
+    <div class="stack">
+      <div class="card"><dl class="kv">
+        <dt>المكان</dt><dd>{{ obj.get_location_type_display }}</dd>
+        <dt>العدد المطلوب</dt><dd>{{ obj.requested_tree_count }}</dd>
+        {% if obj.approved_tree_count %}<dt>الموافق عليه</dt><dd>{{ obj.approved_tree_count }}</dd>{% endif %}
+        <dt>النوع المفضل</dt><dd>{{ obj.preferred_species|default:"يختاره الفريق" }}</dd>
+        <dt>السقي</dt><dd>{% if obj.watering_commitment %}✅ ملتزم{% else %}❌ يحتاج مساعدة{% endif %}</dd>
+        <dt>العنوان</dt><dd>{{ obj.address_description }} — {{ obj.district }} {{ obj.city }}</dd>
+        <dt>التاريخ</dt><dd>{{ obj.created_at|date:"Y/m/d H:i" }}</dd>
+      </dl></div>
+      <div class="map" style="height:240px" data-point-map data-lat="{{ obj.latitude|stringformat:'f' }}" data-lng="{{ obj.longitude|stringformat:'f' }}" data-icon="📍"></div>
+      {% if obj.images.all %}<div class="previews">{% for im in obj.images.all %}<img src="{{ im.image.url }}" alt="">{% endfor %}</div>{% endif %}
+      {% if obj.trees.exists %}<a class="btn btn-primary" href="{% url 'trees:my' %}">🌳 شوف أشجارك ({{ obj.trees.count }})</a>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

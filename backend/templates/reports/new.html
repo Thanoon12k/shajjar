@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}بلّغ عن تجاوز بيئي — شجّر{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head"><h1>🚨 بلّغ عن تجاوز بيئي</h1><p>قطع أشجار، حريق، صيد جائر، تجريف، نفايات… بلاغك يوصل للفريق ويتابع مع الجهات المختصة. تكدر تخفي هويتك.</p></div>
+  <div class="disclaimer" style="margin-bottom:16px">🔥 إذا اكو حريق أو خطر على حياة الناس، اتصل بالدفاع المدني فوراً على <b class="ltr">115</b> وبعدين بلّغ هنا.</div>
+  <form class="stepper" method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+    <section class="step"><h3>نوع البلاغ</h3>{% include "partials/field.html" with field=form.category wide=1 %}</section>
+    <section class="step"><h3>صورة</h3>{% include "partials/field.html" with field=form.photos %}</section>
+    <section class="step"><h3>المكان</h3>
+      <button type="button" class="btn btn-ghost btn-block" id="gps-btn">📍 تحديد موقعي تلقائياً</button>
+      <div class="map picker" style="margin-top:10px" data-picker data-lat="#id_latitude" data-lng="#id_longitude" data-gps="#gps-btn" data-out="#coords-out" data-auto-gps="1"></div>
+      <div class="coords" id="coords-out"></div>{{ form.latitude }}{{ form.longitude }}
+      {% if form.latitude.errors %}<ul class="errorlist"><li>{{ form.latitude.errors.0 }}</li></ul>{% endif %}
+      <div class="grid g2" style="margin-top:12px">{% include "partials/field.html" with field=form.city %}{% include "partials/field.html" with field=form.address_description %}</div>
+    </section>
+    <section class="step"><h3>وصف مختصر</h3>{% include "partials/field.html" with field=form.title %}{% include "partials/field.html" with field=form.description %}{% include "partials/field.html" with field=form.hide_reporter_identity %}</section>
+    <button class="btn btn-danger btn-block" style="font-size:1.1rem;padding:16px">إرسال البلاغ 🚨</button>
+  </form>
+</div>
+{% endblock %}

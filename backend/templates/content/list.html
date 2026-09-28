@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}توعية ومن الميدان — شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>📚 تعلّم ويانا</h1><p>توعية بيئية، رعاية الأشجار، وقصص من الميدان.</p></div>
+  <div class="tabs"><a href="{% url 'content:list' %}" {% if not current %}class="on"{% endif %}>الكل</a>{% for c in cats %}<a href="?c={{ c.slug }}" {% if current == c.slug %}class="on"{% endif %}>{{ c.icon }} {{ c.name }}</a>{% endfor %}<a href="{% url 'content:law' %}">⚖️ اعرف القانون</a></div>
+  <div class="grid g3">{% for a in articles %}<a class="card card-link" href="{{ a.get_absolute_url }}">{% if a.cover_image %}<div class="cover"><img src="{{ a.cover_image.url }}" alt="" loading="lazy"></div>{% endif %}<span class="chip">{{ a.category.icon }} {{ a.category.name }}</span><h3 style="margin-top:10px">{{ a.title }}</h3><p class="muted">{{ a.summary|default:a.body|truncatechars:150 }}</p><span class="small muted">{{ a.published_at|date:"j F Y" }}</span></a>{% empty %}<div class="empty"><span class="e">📚</span>لا يوجد محتوى بعد.</div>{% endfor %}</div>
+</div>
+{% endblock %}

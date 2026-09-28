@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}اعرف القانون البيئي — شجّر{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="page-head"><h1>⚖️ اعرف القانون</h1><p>مرجع مرتب لأهم ما يخص قطع الأشجار، الصيد الجائر، والتجاوز على المساحات الخضراء — شنو الممنوع، وين تبلّغ، وشلون تحمي بيئتك.</p></div>
+  <div class="disclaimer" style="margin-bottom:22px"><b>تنبيه مهم:</b> المعلومات هنا للتوعية العامة وتحتاج مراجعة قانونية رسمية قبل اعتمادها. ما نعتمد منشورات Facebook وحدها كمصدر قانوني — ارجع دائماً للنص الرسمي (مثل قانون حماية وتحسين البيئة رقم 27 لسنة 2009 وقانون الغابات والمشاجر) أو للجهة المختصة.</div>
+  {% for cat in cats %}
+  <h2 style="margin-top:26px">{{ cat.icon }} {{ cat.name }}</h2>
+  {% for a in cat.articles.all %}{% if a.is_published %}
+  <details class="qa-item" {% if forloop.first and forloop.parentloop.first %}open{% endif %}><summary>{{ a.title }}</summary><div class="prose" style="margin-top:10px">{{ a.body|linebreaks }}</div></details>
+  {% endif %}{% empty %}<p class="muted">قريباً.</p>{% endfor %}
+  {% empty %}<div class="empty"><span class="e">⚖️</span>قيد الإعداد.</div>{% endfor %}
+  <div class="cta-band" style="margin-top:36px"><h2>شفت تجاوز؟</h2><p>وثّقه بصورة وموقع — بلاغك يوصل للفريق.</p><a class="btn btn-accent" href="{% url 'reports:new' %}">🚨 بلّغ الآن</a></div>
+</div>
+{% endblock %}

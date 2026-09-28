@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ c.title }} — حملات شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><div class="crumbs"><a href="{% url 'campaigns:list' %}">الحملات</a></div><h1>🌳 {{ c.title }}</h1><span class="chip">{{ c.get_status_display }}</span></div>
+  <div class="grid g2">
+    <div class="stack">
+      {% if c.cover_image %}<img src="{{ c.cover_image.url }}" alt="" style="border-radius:20px">{% endif %}
+      <div class="card"><dl class="kv">
+        <dt>📅 اليوم</dt><dd>{{ c.start_date|date:"l j F Y" }}</dd>
+        <dt>⏰ الوقت</dt><dd>{{ c.start_date|time:"g:i A" }}{% if c.end_date %} — {{ c.end_date|time:"g:i A" }}{% endif %}</dd>
+        <dt>📍 المكان</dt><dd>{{ c.location_name }}</dd>
+        {% if c.target_tree_count %}<dt>🎯 الهدف</dt><dd>{{ c.target_tree_count }} شجرة</dd>{% endif %}
+        {% if c.organization %}<dt>🏢 الجهة</dt><dd>{{ c.organization }}</dd>{% endif %}
+        <dt>👥 المسجلون</dt><dd>{{ count }}{% if c.volunteers_needed %} / {{ c.volunteers_needed }}{% endif %}</dd>
+      </dl>
+      {% if c.volunteers_needed %}<div class="meter" style="margin-top:12px"><i style="width:{% widthratio count c.volunteers_needed 100 %}%"></i></div>{% endif %}
+      <div style="margin-top:16px">
+        {% if me %}
+          <div class="chip good">✅ أنت مسجّل — {{ me.get_status_display }}</div>
+          {% if me.status == 'registered' or me.status == 'approved' %}<form method="post" action="{% url 'campaigns:leave' c.pk %}" style="margin-top:10px">{% csrf_token %}<button class="btn btn-ghost btn-sm">إلغاء المشاركة</button></form>{% endif %}
+        {% elif c.registration_open %}
+          <form method="post" action="{% url 'campaigns:join' c.pk %}">{% csrf_token %}<button class="btn btn-primary btn-block">🤝 أريد المشاركة</button></form>
+        {% else %}<div class="chip">التسجيل مغلق</div>{% endif %}
+      </div></div>
+      <div class="card prose">{{ c.description|linebreaks }}</div>
+    </div>
+    {% if c.latitude %}<div class="map" style="height:380px" data-point-map data-lat="{{ c.latitude|stringformat:'f' }}" data-lng="{{ c.longitude|stringformat:'f' }}" data-icon="🤝"></div>{% endif %}
+  </div>
+</div>
+{% endblock %}

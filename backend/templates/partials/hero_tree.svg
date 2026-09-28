@@ -1,0 +1,22 @@
+<svg viewBox="0 0 440 440" role="img" aria-label="شجرة تنمو">
+  <defs>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff6c9" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c9" stop-opacity="0"/></radialGradient>
+    <linearGradient id="crownA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b6e36b"/><stop offset="1" stop-color="#3d8c44"/></linearGradient>
+    <linearGradient id="crownB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc63f"/><stop offset="1" stop-color="#2a6b36"/></linearGradient>
+  </defs>
+  <circle cx="220" cy="210" r="200" fill="url(#sun)"/>
+  <g class="ring" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.5" stroke-dasharray="3 9"><circle cx="220" cy="220" r="190"/></g>
+  <g class="ring r2" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1"><circle cx="220" cy="220" r="160" stroke-dasharray="40 14"/></g>
+  <!-- ground -->
+  <ellipse cx="220" cy="388" rx="150" ry="18" fill="rgba(0,0,0,.18)"/>
+  <path d="M90 388 Q220 360 350 388" fill="none" stroke="#d9a441" stroke-width="5" stroke-linecap="round"/>
+  <g class="sway">
+    <path class="grow-trunk" d="M220 386 C 218 330 226 300 220 200" fill="none" stroke="#6b4a1f" stroke-width="16" stroke-linecap="round"/>
+    <path class="grow-branch" d="M221 290 C 250 270 270 250 285 220" fill="none" stroke="#6b4a1f" stroke-width="8" stroke-linecap="round"/>
+    <path class="grow-branch" d="M220 260 C 190 245 170 225 160 200" fill="none" stroke="#6b4a1f" stroke-width="7" stroke-linecap="round"/>
+    <g class="grow-crown"><circle cx="220" cy="160" r="82" fill="url(#crownB)"/></g>
+    <g class="grow-crown"><circle cx="160" cy="195" r="56" fill="url(#crownA)"/><circle cx="288" cy="198" r="60" fill="url(#crownA)"/></g>
+    <g class="grow-crown"><circle cx="228" cy="118" r="46" fill="#b6e36b" opacity=".9"/><circle cx="190" cy="150" r="10" fill="#c2334d"/><circle cx="262" cy="182" r="9" fill="#c2334d"/><circle cx="236" cy="210" r="8" fill="#f0a04b"/></g>
+  </g>
+  <text x="220" y="425" text-anchor="middle" fill="rgba(255,255,255,.75)" font-family="Reem Kufi" font-size="18">#شجّر</text>
+</svg>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}خريطة شجّر — الموصل ونينوى{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>🗺️ خريطة شجّر</h1><p>مواقع التشجير والأشجار المسجلة في الموصل ونينوى. اضغط أي نقطة لتشوف النوع، تاريخ الزراعة، المسؤول عن السقي والحالة.</p></div>
+  <div class="map-filters">
+    <button class="btn btn-primary btn-sm" data-map-filter="all">الكل</button>
+    <button class="btn btn-ghost btn-sm" data-map-filter="good">🟢 بحالة جيدة</button>
+    <button class="btn btn-ghost btn-sm" data-map-filter="attention">🟡 تحتاج متابعة</button>
+    <button class="btn btn-ghost btn-sm" data-map-filter="damaged">🔴 متضررة</button>
+    <button class="btn btn-ghost btn-sm" data-map-filter="forest">🌲 غابات</button>
+    <button class="btn btn-ghost btn-sm" data-map-filter="trees">🌳 أشجار فردية</button>
+    <button class="btn btn-ghost btn-sm" data-locate-me>📍 موقعي</button>
+  </div>
+  <div class="map tall" data-sites-map="{% url 'planting:data' %}" data-wheel="1"></div>
+  <div class="legend"><span><i class="dot"></i> بحالة جيدة</span><span><i class="dot attention"></i> تحتاج متابعة</span><span><i class="dot damaged"></i> متضررة</span><span><i class="dot forest"></i> غابة / مشروع تشجير</span></div>
+</div>
+{% endblock %}

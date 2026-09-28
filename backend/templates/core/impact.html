@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load humanize %}
+{% block title %}أثرنا بالأرقام — شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><h1>📊 أثرنا بالأرقام</h1><p>أرقام حقيقية من قاعدة بيانات المنصة — تتحدث مع كل زراعة وكل متابعة.</p></div>
+  <div class="kpis">
+    <div class="kpi"><b data-count="{{ stats.trees }}">{{ stats.trees|intcomma }}</b><span>🌳 مزروعة</span></div>
+    <div class="kpi"><b data-count="{{ stats.alive }}">{{ stats.alive|intcomma }}</b><span>💚 حية</span></div>
+    <div class="kpi warn"><b>{{ stats.damaged|intcomma }}</b><span>🟡 متضررة</span></div>
+    <div class="kpi alert"><b>{{ stats.dead|intcomma }}</b><span>🔴 ميتة</span></div>
+    <div class="kpi"><b>{{ stats.sites }}</b><span>📍 موقع</span></div>
+    <div class="kpi"><b>{{ stats.volunteers }}</b><span>👥 متطوع</span></div>
+  </div>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="card center"><h3>نسبة النجاح</h3><div class="ring-chart" style="--p: {{ stats.survival_rate|stringformat:'f' }}"><div><div><b>{{ stats.survival_rate }}%</b><span class="small muted">من الأشجار حية</span></div></div></div><p class="small muted" style="margin-top:12px">نسبة النجاح = الحية ÷ المزروعة × 100</p></div>
+    <div class="card"><h3>حسب المدينة / القضاء</h3><div class="bars">{% for r in by_city %}<div class="bar"><span>{{ r.city }}</span><div class="track"><i style="width:{{ r.pct|floatformat:0 }}%"></i></div><span class="small">{{ r.n|intcomma }} · {{ r.rate }}%</span></div>{% endfor %}</div>
+    <h3 style="margin-top:20px">حسب نوع الموقع</h3><div class="row" style="gap:6px">{% for k in by_kind %}<span class="chip">{{ k.label }}: {{ k.n|intcomma }}</span>{% endfor %}</div></div>
+  </div>
+</div>
+{% endblock %}

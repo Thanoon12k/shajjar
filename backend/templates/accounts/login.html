@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}تسجيل الدخول — شجّر{% endblock %}
+{% block content %}
+<div class="narrow" style="max-width:460px">
+  <div class="page-head center"><div style="font-size:3rem">🌳</div><h1>أهلاً بيك</h1><p>سجّل دخولك حتى تطلب شجرة، تتابع أشجارك، وتبلّغ.</p></div>
+  <form class="form card" method="post">{% csrf_token %}
+    {% if form.non_field_errors %}<ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    {% include "partials/field.html" with field=form.username %}
+    {% include "partials/field.html" with field=form.password %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="btn btn-primary btn-block">دخول</button>
+    <p class="center muted">ما عندك حساب؟ <a href="{% url 'accounts:register' %}{% if next %}?next={{ next|urlencode }}{% endif %}">سجّل الآن</a></p>
+  </form>
+</div>
+{% endblock %}

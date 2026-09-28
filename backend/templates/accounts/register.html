@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}إنشاء حساب — شجّر{% endblock %}
+{% block content %}
+<div class="narrow" style="max-width:560px">
+  <div class="page-head center"><div style="font-size:3rem">🌱</div><h1>انضم لـ #شجّر</h1><p>حساب واحد: تطلب أشجار، تتابعها، تبلّغ، وتتطوع.</p></div>
+  <form class="form card" method="post" novalidate>{% csrf_token %}
+    {% include "partials/field.html" with field=form.full_name %}
+    {% include "partials/field.html" with field=form.email %}
+    {% include "partials/field.html" with field=form.phone_number %}
+    <div class="grid g2">{% include "partials/field.html" with field=form.city %}{% include "partials/field.html" with field=form.district %}</div>
+    {% include "partials/field.html" with field=form.password1 %}
+    {% include "partials/field.html" with field=form.password2 %}
+    {% include "partials/field.html" with field=form.wants_to_volunteer %}
+    <button class="btn btn-primary btn-block">إنشاء الحساب 🌳</button>
+    <p class="center muted">عندك حساب؟ <a href="{% url 'accounts:login' %}">دخول</a></p>
+  </form>
+</div>
+{% endblock %}

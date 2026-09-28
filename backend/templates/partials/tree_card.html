@@ -1,0 +1,5 @@
+<a class="card card-link" href="{{ t.get_absolute_url }}">
+  <div class="row between"><span class="code-badge" style="font-size:.95rem;padding:2px 10px">{{ t.tree_code }}</span><span class="chip {% if t.health_status == 'excellent' or t.health_status == 'good' %}good{% elif t.health_status == 'needs_care' %}warn{% else %}bad{% endif %}">{{ t.get_health_status_display }}</span></div>
+  <h3 style="margin-top:12px">{{ t.species.emoji }} {{ t.nickname|default:t.species.arabic_name }}</h3>
+  <div class="meta"><span>📍 {{ t.place }}</span><span>⏳ {{ t.age_days }} يوم</span>{% if t.height_cm %}<span>📏 {{ t.height_cm }} سم</span>{% endif %}</div>
+</a>

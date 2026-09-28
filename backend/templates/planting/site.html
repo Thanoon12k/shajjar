@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ site.name }} — شجّر{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head">
+    <div class="crumbs"><a href="{% url 'planting:map' %}">الخريطة</a> / {{ site.get_kind_display }}</div>
+    <h1>{% if site.kind == 'forest' %}🌲{% else %}🌳{% endif %} {{ site.name }}</h1>
+    <div class="meta"><span>📍 {% if site.district %}{{ site.district }} – {% endif %}{{ site.city }}، {{ site.governorate }}</span>{% if site.organization %}<span>🏢 {{ site.organization }}</span>{% endif %}<span class="chip"><span class="dot {{ site.health }}"></span>{{ site.get_status_display }}</span></div>
+  </div>
+  <div class="grid g2">
+    <div class="stack">
+      {% if site.before_image and site.after_image %}
+      <div class="ba"><img src="{{ site.before_image.url }}" alt="قبل"><img class="after" src="{{ site.after_image.url }}" alt="بعد"><div class="handle"></div><span class="lbl b">قبل</span><span class="lbl a">بعد</span><input type="range" min="0" max="100" value="50" aria-label="اسحب للمقارنة"></div>
+      {% elif site.cover_image %}<img src="{{ site.cover_image.url }}" alt="{{ site.name }}" style="border-radius:20px">{% endif %}
+      <div class="card">
+        <dl class="kv">
+          <dt>🌳 عدد الأشجار</dt><dd>{{ site.total_trees }}</dd>
+          <dt>🌱 الأنواع</dt><dd>{% for sp in site.species.all %}<a href="{% url 'species:detail' sp.pk %}">{{ sp.arabic_name }}</a>{% if not forloop.last %}، {% endif %}{% empty %}—{% endfor %}</dd>
+          <dt>📅 الزراعة</dt><dd>{{ site.planting_date|date:"F Y"|default:"—" }}</dd>
+          <dt>💧 المسؤول عن السقي</dt><dd>{{ site.watering_entity|default:"—" }}</dd>
+          <dt>✅ الحالة</dt><dd>{{ site.get_status_display }}</dd>
+        </dl>
+      </div>
+      {% if site.description %}<div class="card prose">{{ site.description|linebreaks }}{% if site.source_url %}<a href="{{ site.source_url }}" target="_blank" rel="noopener">📘 المنشور الأصلي ↗</a>{% endif %}</div>{% endif %}
+    </div>
+    <div class="stack">
+      <div class="map" style="height:320px" data-point-map data-lat="{{ site.latitude|stringformat:'f' }}" data-lng="{{ site.longitude|stringformat:'f' }}" data-health="{{ site.health }}" data-icon="{% if site.kind == 'forest' %}🌲{% else %}🌳{% endif %}"></div>
+      {% if site.total_trees %}
+      <div class="card">
+        <h3>نسبة النجاح</h3>
+        <div class="ring-chart" style="--p: {{ site.survival_rate|stringformat:'f' }}"><div><div><b>{{ site.survival_rate }}%</b><span class="small muted">حية</span></div></div></div>
+        <div class="grid g3" style="margin-top:14px;text-align:center"><div><span class="tile-num" style="color:var(--good)">{{ site.alive_trees }}</span>حية</div><div><span class="tile-num" style="color:var(--warn)">{{ site.damaged_trees }}</span>متضررة</div><div><span class="tile-num" style="color:var(--bad)">{{ site.dead_trees }}</span>ميتة</div></div>
+      </div>
+      {% endif %}
+      {% if site.batches.all %}<div class="card"><h3>دفعات الزراعة</h3><div class="tbl-wrap"><table class="tbl"><tr><th>الرمز</th><th>النوع</th><th>العدد</th><th>التاريخ</th></tr>{% for b in site.batches.all %}<tr><td class="ltr">{{ b.batch_code }}</td><td>{{ b.species }}</td><td>{{ b.quantity }}</td><td>{{ b.planting_date|date:"Y/m/d" }}</td></tr>{% endfor %}</table></div></div>{% endif %}
+    </div>
+  </div>
+  {% if trees %}<h2 style="margin-top:36px">أشجار مسجلة بهذا الموقع</h2><div class="grid g4">{% for t in trees %}{% include "partials/tree_card.html" %}{% endfor %}</div>{% endif %}
+</div>
+{% endblock %}
