@@ -150,7 +150,8 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
-    SECURE_REFERRER_POLICY = "same-origin"
+    # OSM tile servers require a Referer header (osm.wiki/Blocked)
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 LOGGING = {
     "version": 1,

@@ -116,7 +116,7 @@
 
   function baseMap(el, opts) {
     var m = L.map(el, Object.assign({ scrollWheelZoom: false, attributionControl: true }, opts || {})).setView(center, zoom);
-    L.tileLayer(TILE, { maxZoom: 19, attribution: ATTR }).addTo(m);
+    L.tileLayer(TILE, { maxZoom: 19, attribution: ATTR, referrerPolicy: "strict-origin-when-cross-origin" }).addTo(m);
     m.on("focus click", function () { m.scrollWheelZoom.enable(); });
     return m;
   }
